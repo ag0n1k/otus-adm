@@ -1,0 +1,43 @@
+---
+
+- name: Include OS-specific variables
+  include_vars: "{{ ansible_os_family | lower }}.yml"
+
+- name: Setup repository for nginx
+  template:
+    src: nginx.repo.j2
+    dest: "{{ repo_filename }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install Nginx
+  yum:
+    name: nginx
+    state: latest
+
+- name: Copy nginx configuration in place
+  template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_conf_file_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload nginx
+
+- name: Copy nginx server configuration in place
+  template:
+    src: conf.d/default.conf.j2
+    dest: "{{ nginx_conf_path }}/default.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload nginx
+
+- name: Ensure nginx is started and enabled to start at boot
+  service:
+    name: nginx
+    state: started
+    enabled: yes

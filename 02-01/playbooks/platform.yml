@@ -1,0 +1,24 @@
+---
+- name: "Platform: Setup Nginx"
+  hosts: nginx
+  gather_facts: true
+  become: yes
+  pre_tasks:
+    - name: Here may be some pre tasks
+      debug:
+        msg: 'This is setup of nginx for tests'
+  roles:
+    - nginx-setup
+
+  post_tasks:
+  - name: Check that site is avaliable
+    uri:
+      url: "http://{{ ansible_eth1.ipv4.address }}:{{ nginx_listen }}"
+      status_code: 200
+      return_content: yes
+    register: nginx_response
+    delegate_to: localhost
+
+  - name: Look at content
+    debug:
+      msg: "{{ nginx_response }}"
