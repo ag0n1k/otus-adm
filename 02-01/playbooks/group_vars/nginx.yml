@@ -21,21 +21,8 @@ nginx_server_names_hash_bucket_size: "64"
 
 nginx_remove_default_vhost: false
 
-nginx_vhosts:
- - listen: "8080" # default: "80"
-   server_name: "anv.otuslinux.com"
-   root: "/var/www/anv.otuslinux.com" # default: N/A
-   index: "index.html index.htm"
-#   filename: "example.com.conf" # Can be used to set the filename of the vhost file.
-#
-#   # Properties that are only added if defined:
-#   server_name_redirect: "www.example.com" # default: N/A
-#   error_page: ""
-#   access_log: ""
-#   error_log: ""
-#   extra_parameters: "" # Can be used to add extra config blocks (multiline).
-#   template: "" # Can be used to override the `nginx_vhost_template` per host.
-#   state: "absent" # To remove the vhost configuration.
+nginx_listen: 8080
+nginx_server_name: anv.otuslinux.com
 
 nginx_log_format: |
   '$remote_addr - $remote_user [$time_local] "$request" '
