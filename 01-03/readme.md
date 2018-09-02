@@ -26,6 +26,16 @@
 ```
 $ bash exercise-course.sh
 # hope as simple as that
+# The script contains all steps of exercise:
+# - initial vagrant setup 
+# - add disks by vboxmanage ctl (storage control and attach)
+# - prepae vm for boot from new disk (prepare_new_disk)
+# - resize root lvm and create new (resize_root_lvm)
+# - setup and test snapshots for home directory (snap_home_test)
+# - setup mirror lvm for var directory (mirror_var_lvm)
+#
+# Note: no all vars are at settings as this is test environment...
+
 
 # After script ends manually check by:
 $ vagrant ssh

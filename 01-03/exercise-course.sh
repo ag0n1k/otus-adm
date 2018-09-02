@@ -7,10 +7,10 @@ echo 'Up'
 vagrant up > /dev/null
 
 echo "Set up variables..."
-
-script_path=$(readlink -f $0)
-script_dir=$(dirname $script_path)
-. $script_dir/resize-root-lvm.conf
+vm_key="01-03"
+disk_name="new_disk.vdi"
+vm_home_dir="$HOME/vbox_vms"
+sata_ctl_name="SATA Controller"
 new_disk_size=10240
 
 echo "Lookup ssh information from vagrant (Host, Port and private key path)"
