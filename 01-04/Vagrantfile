@@ -1,0 +1,40 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+  :otuslinux => {
+        :box_name => "centos/7",
+        :ip_addr => '192.168.11.101',
+  },
+}
+
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+      config.vm.define boxname do |box|
+
+          box.vm.box = boxconfig[:box_name]
+          box.vm.host_name = boxname.to_s
+
+          box.vm.network "private_network", ip: boxconfig[:ip_addr]
+
+          box.vm.provider :virtualbox do |vb|
+            	  vb.customize ["modifyvm", :id, "--memory", "1024"]
+     	  box.vm.provision "shell", inline: <<-SHELL
+                  setenforce 0
+	          mkdir -p ~root/.ssh
+                  cp ~vagrant/.ssh/auth* ~root/.ssh
+                  vgs
+                  vgrename VolGroup00 vg_group_00
+                  sed -i 's/VolGroup00/vg_group_00/g' /boot/grub2/grub.cfg
+                  sed -i 's/VolGroup00/vg_group_00/g' /etc/fstab
+                  mkdir /usr/lib/dracut/modules.d/01test
+                  cp /vagrant/module_setup.sh /usr/lib/dracut/modules.d/01test/module-setup.sh
+                  cp /vagrant/test.sh /usr/lib/dracut/modules.d/01test/test.sh
+                  mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
+  	      SHELL
+  	      end
+      end
+  end
+end
