@@ -2,18 +2,13 @@
 
 ### Task:
 
-Подготовить стенд на Vagrant как минимум с одним сервером. На этом сервере используя Ansible необходимо развернуть nginx со следующими условиями:
-- необходимо использовать модуль yum/apt
-- конфигурационные файлы должны быть взяты из шаблона jinja2 с перемененными
-- после установки nginx должен быть в режиме enabled в systemd
-- должен быть использован notify для старта nginx после установки
-- сайт должен слушать на нестандартном порту - 8080, для этого использовать переменные в Ansible
-* Сделать все это с использованием Ansible роли
-
-Cчитается принятым, если:
-- предоставлен Vagrantfile и готовый playbook/роль ( инструкция по запуску стенда, если посчитаете необходимым )
-- после запуска стенда nginx доступен на порту 8080
-- при написании playbook/роли соблюдены перечисленные в задании условия
+Provision nginx to server with Ansible role:
+- use module yum/apt
+- use template with jinja2 
+- after install nginx must be in enabled mode in systemd
+- use handler with notify for start nginx after install
+- site listen on - 8080 port, use variable for that
+- \*Additional All made in Ansible role
 
 ### Description:
 
