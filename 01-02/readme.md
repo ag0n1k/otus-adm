@@ -6,8 +6,7 @@
 - create R0/R5/R10
 - configure raid the way that it's work on boot
 - create GPT volume with 5 partitions
-
-* Additional - Vagrantfile with raid system
+- \*Additional - Vagrantfile with raid system at startup
 
 ### Description:
 
