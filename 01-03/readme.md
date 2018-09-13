@@ -1,23 +1,23 @@
 # Working with LVM
 
 ### Task:
-- на имеющемся образе 
+- On existing image:
 /dev/mapper/VolGroup00-LogVol00 38G 738M 37G 2% /
 
-- уменьшить том под / до 8G
-- выделить том под /home
-- выделить том под /var
-- /var - сделать в mirror
-- /home - сделать том для снэпшотов
-- прописать монтирование в fstab
-- попробовать с разными опциями и разными файловыми системами ( на выбор)
-- сгенерить файлы в /home/
-- снять снэпшот
-- удалить часть файлов
-- восстановится со снэпшота
-- залоггировать работу можно с помощью утилиты script
+- decrease root / to 8G
+- create lvm for /home
+- create lvm for /var
+- /var - mirror mode
+- /home - snapshot tests
+- edit fstab
+- look at options for filesystems
+- generate files at /home/
+- get snapshot backup
+- remove files
+- restore from snapshot
+- you may log work by utility `script`
 
-* на нашей куче дисков попробовать поставить btrfs/zfs - с кешем, снэпшотами - разметить здесь каталог /opt
+* Try btrfs/zfs on /opt - with cache and snaphosts
 
 ### Description:
 
