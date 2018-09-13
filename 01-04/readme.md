@@ -4,10 +4,9 @@
 - Get to system without password
 - On the system installed on LVM rename Volume Group
 - Add module to initrd
-
-* Доп задание - сконфигурировать систему без отдельного раздела с /boot, а только с LVM
-Репозиторий с пропатченым grub: https://yum.rumyantsev.com/centos/7/x86_64/
-PV необходимо инициализировать с параметром --bootloaderareasize 1m
+- \*Additional - configure system without separated /boot, only with LVM
+  * Patched grub at: https://yum.rumyantsev.com/centos/7/x86_64/
+  * PV must be inited with `--bootloaderareasize 1m`
 
 ### Description:
 
