@@ -1,18 +1,13 @@
 # Working with mdadm
 
 ### Task:
-- добавить в Vagrantfile еще дисков
-- сломать/починить raid
-- собрать R0/R5/R10 на выбор 
-- прописать собранный рейд в конф, чтобы рейд собирался при загрузке
-- создать GPT раздел и 5 партиций
+- add disks to VagrantFile
+- broke and restore raid
+- create R0/R5/R10
+- configure raid the way that it's work on boot
+- create GPT volume with 5 partitions
 
-* доп. задание - Vagrantfile, который сразу собирает систему с подключенным рейдом
-
-Считается принятым, если:
-- Приложен измененный Vagrantfile, 
-- скрипт для создания рейда, 
-- конф для автосборки рейда при загрузке
+* Additional - Vagrantfile with raid system
 
 ### Description:
 
