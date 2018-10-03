@@ -1,0 +1,10 @@
+[Unit]
+Description=Start monitor every 30 secs
+
+[Timer]
+OnUnitActiveSec=30s
+OnBootSec=30s
+Unit=log_monitor.service
+
+[Install]
+WantedBy=timers.targetyu

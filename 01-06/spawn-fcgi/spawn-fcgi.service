@@ -1,0 +1,9 @@
+[Unit]
+Description=Spawn FastCGI scripts to be used by web servers
+
+[Service]
+Type=forking
+ExecStartPre=/bin/sh "[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/spawn-fcgi"
+ExecStartPre=/bin/sh ". /etc/rc.d/init.d/functions"
+ExecStart=/usr/sbin/spawn-fcgi.sh start
+ExecStop=/usr/sbin/spawn-fcgi.sh stop

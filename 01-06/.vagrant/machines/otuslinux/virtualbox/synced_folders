@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/home/ag0n1k/PycharmProjects/otus-adm/01-06","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

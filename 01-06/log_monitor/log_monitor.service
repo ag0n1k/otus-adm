@@ -1,0 +1,9 @@
+Description=Find phrase in a provided log file
+
+[Service]
+Type=simple
+#PIDFile=/var/run/log_monitor.pid
+EnvironmentFile=/etc/sysconfig/log_monitor.conf
+ExecStart=/usr/local/bin/log_monitor.sh $OPTIONS
+#ExecStop=/bin/kill -s TERM $MAINPID
+#ExecStartPost=/bin/sh -c 'umask 022; pgrep log_monitor > /var/run/log_monitor.pid'
