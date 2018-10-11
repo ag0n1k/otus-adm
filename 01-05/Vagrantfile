@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+  :otuslinux => {
+        :box_name => "centos/7",
+        :ip_addr => '192.168.11.101',
+  },
+}
+
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+      config.vm.define boxname do |box|
+
+          box.vm.box = boxconfig[:box_name]
+          box.vm.host_name = boxname.to_s
+
+          box.vm.network "private_network", ip: boxconfig[:ip_addr]
+
+          box.vm.provider :virtualbox do |vb|
+            	  vb.customize ["modifyvm", :id, "--memory", "1024"]
+     	  box.vm.provision "shell", inline: <<-SHELL
+	          mkdir -p ~root/.ssh
+              cp ~vagrant/.ssh/auth* ~root/.ssh
+              echo '---------------------Start script'
+              bash /vagrant/service_watchdog.sh /tmp/cron.pid > /tmp/cron.log &
+              echo '---------------------Sleep....'
+              sleep 3
+              echo '---------------------Ensure script is working'
+              tail /tmp/cron.log
+              echo '---------------------Pid is'
+              cat /tmp/cron.pid
+              sleep 3
+              echo '---------------------Now there is file flag'
+              ls -l /tmp/service_watchdog_started
+              echo '---------------------Kill script by send SIGTERM'
+              kill -15 $(cat /tmp/cron.pid)
+              echo '---------------------Sleep....'
+              sleep 15
+              echo '---------------------Now there is no file flag'
+              ls -l /tmp/
+              sleep 3
+  	      SHELL
+  	      end
+      end
+  end
+end
