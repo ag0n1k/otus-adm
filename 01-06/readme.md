@@ -9,6 +9,8 @@ All variables must be set up in /etc/sysconfig directory
 
 ## How to:
 
+All scripts starts at the end of vagrant file.
+
 ```bash
 $ vagrant up
 ```
