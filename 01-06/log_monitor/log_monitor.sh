@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+pid_=$$
+echo $pid_ > /var/run/log_monitor.pid
+
 function log {
   echo "[$(date)]: $*"
 }
