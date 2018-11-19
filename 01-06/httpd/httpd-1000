@@ -14,8 +14,7 @@
 # To pass additional options (for instance, -D definitions) to the
 # httpd binary at startup, set OPTIONS here.
 #
-#OPTIONS=
-
+OPTIONS="-f /opt/httpd2/conf/httpd.conf"
 #
 # This setting ensures the httpd process is started in the "C" locale
 # by default.  (Some modules will not behave correctly if
