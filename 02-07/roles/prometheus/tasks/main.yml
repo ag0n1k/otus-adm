@@ -1,0 +1,57 @@
+---
+
+- name: Include OS-specific variables
+  include_vars: "{{ ansible_os_family | lower }}.yml"
+
+- name: Ensure group exist
+  become: true
+  group:
+    name: "{{ prometheus_user_configuration.group }}"
+    system: "{{ prometheus_user_configuration.system | default(omit) }}"
+    gid: "{{ prometheus_user_configuration.gid | default(omit) }}"
+
+- name: Ensure user exist
+  become: true
+  user:
+    name: "{{ prometheus_user_configuration.username }}"
+    password: "{{ prometheus_user_configuration.password | default(omit) }}"
+    system: "{{ prometheus_user_configuration.system  | default(omit)}}"
+    uid: "{{ prometheus_user_configuration.uid | default(omit) }}"
+    shell: "{{ prometheus_user_configuration.shell | default(omit) }}"
+    home: "{{ prometheus_user_configuration.home | default(omit) }}"
+    create_home: "{{ prometheus_user_configuration.create_home | default(omit) }}"
+  no_log: "{{ prometheus_no_log | default(omit) }}"
+
+- name: Ensure directories for prometheus exist with right permissions
+  become: true
+  file:
+    path: "{{ item }}"
+    mode: "{{ prometheus_data_dir_mode }}"
+    owner: "{{ prometheus_user_configuration.username }}"
+    group: "{{ prometheus_user_configuration.group }}"
+    state: directory
+  loop: "{{ prometheus_data_dir }} + [ '{{ prometheus_log4j_root_path  }}' ]"
+
+- name: Ensure configuration directories for prometheus exist with right permissions
+  become: true
+  file:
+    path: "{{ item }}"
+    mode: "{{ prometheus_conf_dir_mode }}"
+    owner: "{{ prometheus_user_configuration.username }}"
+    group: "{{ prometheus_user_configuration.group }}"
+    state: directory
+  loop:
+    - "{{ prometheus_conf_dir }}"
+    - "{{ prometheus_conf_dir }}/conf.d"
+    - "{{ prometheus_conf_dir }}/rules"
+    - "{{ prometheus_conf_dir }}/file_sd"
+
+- include_tasks: install-tar.yml
+
+- name: Configure service
+  become: true
+  template:
+    src: kafka.service.j2
+    dest: "{{ dmpkit_kafka_service_directory }}/{{ dmpkit_kafka_service_name }}.service"
+    backup: true
+  register: __dmpkit_kafka_service_configuration

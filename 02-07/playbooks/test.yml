@@ -1,0 +1,15 @@
+- name: Test change vars in task
+  hosts: nginx
+  gather_facts: true
+  tasks:
+    - debug:
+        msg: "{{ hostvars }}"
+
+    - debug:
+        msg: "{{ play_hosts }}"
+    - name: ls
+      shell: ls
+      register: ls_
+      delegate_to: nginx
+    - debug:
+        msg: "{{ ls_.stdout }}" 

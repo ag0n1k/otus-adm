@@ -1,0 +1,3 @@
+---
+prometheus_selinux: true
+prometheus_selinux_blablabla: ...

@@ -1,0 +1,43 @@
+---
+##note: To handle destination directory where prometheus is supposed to be installed
+# create directory for the prometheus and then extract components there because of:
+# - 'unarchived' task does not create destination directory
+# - prometheus archive contains directory
+- name: Check prometheus is installed
+  become: true
+  file:
+    path: "{{ prometheus_path }}"
+    mode: "{{ prometheus_path_mode }}"
+    owner: "{{ prometheus_user_configuration.username }}"
+    group: "{{ prometheus_user_configuration.group }}"
+    state: directory
+  register: __prometheus_installed
+
+- name: Unarchive prometheus distribution
+  when: __prometheus_installed.changed
+  become: true
+  unarchive:
+    dest: "{{ prometheus_path }}"
+    remote_src: true
+    src: "{{ prometheus_archive_path }}"
+    owner: "{{ prometheus_user_configuration.username }}"
+    group: "{{ prometheus_user_configuration.group }}"
+  no_log: "{{ prometheus_no_log }}"
+
+- name: "Ensure prometheus scripts are in '{{ prometheus_install_bin_path }}'"
+  copy:
+    src: "{{ prometheus_path }}/{{ item }}"
+    dest: "{{ prometheus_bin_dir }}/{{ item }}"
+    mode: "0755"
+  loop:
+    - prometheus
+    - promtool
+
+- name: "Ensure prometheus console templates are in '{{ prometheus_install_bin_path }}'"
+  copy:
+    src: "{{ prometheus_path }}/{{ item }}/"
+    dest: "{{ prometheus_conf_dir }}/{{ item }}/"
+    mode: "0755"
+  loop:
+    - console_libraries
+    - consoles
