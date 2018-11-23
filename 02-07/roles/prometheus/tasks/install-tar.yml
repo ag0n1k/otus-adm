@@ -25,6 +25,7 @@
   no_log: "{{ prometheus_no_log }}"
 
 - name: "Ensure prometheus scripts are in '{{ prometheus_install_bin_path }}'"
+  become: true
   copy:
     src: "{{ prometheus_path }}/{{ item }}"
     dest: "{{ prometheus_bin_dir }}/{{ item }}"
@@ -33,7 +34,8 @@
     - prometheus
     - promtool
 
-- name: "Ensure prometheus console templates are in '{{ prometheus_install_bin_path }}'"
+- name: "Ensure prometheus console templates are in '{{ prometheus_conf_dir }}'"
+  become: true
   copy:
     src: "{{ prometheus_path }}/{{ item }}/"
     dest: "{{ prometheus_conf_dir }}/{{ item }}/"
@@ -41,3 +43,11 @@
   loop:
     - console_libraries
     - consoles
+
+- name: Configure service
+  become: true
+  template:
+    src: prometheus.service.j2
+    dest: "{{ prometheus_service_dir }}/{{ prometheus_service_name }}.service"
+    backup: true
+  register: __dmpkit_kafka_service_configuration

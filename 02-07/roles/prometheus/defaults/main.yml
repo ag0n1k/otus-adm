@@ -27,4 +27,56 @@ prometheus_conf_dirs_mode: "0750"
 
 prometheus_bin_dir: /usr/bin
 
+prometheus_service_dir: /usr/lib/systemd
+prometheus_service_name: prometheus
+
+prometheus_pam_domain: prometheus
+prometheus_pam_no_file: "10240"
+
 prometheus_no_log: true
+
+prometheus_storage_retention: 30d
+prometheus_listen_address: "0.0.0.0:9000"
+
+prometheus_config: {}
+
+__prometheus_config: "{{ __prometheus_config_default | combine(prometheus_config, recursive=True) }}"
+
+__prometheus_config_default:
+  #global config
+  global:
+    scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+    evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+  # Alertmanager configuration
+  alerting:
+    alertmanagers:
+      - static_configs:
+      - targets:
+          # - alertmanager:9093
+
+  # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+  rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+  # A scrape configuration containing exactly one endpoint to scrape:
+  # Here it's Prometheus itself.
+  scrape_configs:
+    # The job name is added as a label job=<job_name> to any timeseries scraped from this config.
+    - job_name: 'prometheus'
+
+  # metrics_path defaults to '/metrics'
+  # scheme defaults to 'http'.
+
+  static_configs:
+    - targets: ['0.0.0.0:9090']
+
+    - job_name: 'dmpkit-api-services'
+  metrics_path: '/prometheus'
+  # bearer_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoibnVsbCIsIm9yZyI6IntcImV4dF9pZFwiOlwicHJvbWV0aGV1c1wiLFwiaG9tZVwiOm51bGx9IiwiaXNzIjoiZG1wa2l0In0.LsGz_8iZJWvOzTKXRlgyEnInhP56ncCDEP-b02sBJvM
+
+  file_sd_configs:
+    - files:
+      - /etc/prometheus/file_sd/dmpkit-api-services.json

@@ -48,10 +48,14 @@
 
 - include_tasks: install-tar.yml
 
-- name: Configure service
+- name: Configure nofile limits for prometheus vi pam
   become: true
-  template:
-    src: kafka.service.j2
-    dest: "{{ dmpkit_kafka_service_directory }}/{{ dmpkit_kafka_service_name }}.service"
-    backup: true
-  register: __dmpkit_kafka_service_configuration
+  pam_limits:
+    domain: "{{ prometheus_pam_domain }}"
+    limit_item: nofile
+    limit_type: "{{ item }}"
+    value: "{{ prometheus_pam_no_file }}"
+    use_max: true
+  loop:
+      - soft
+      - hard
