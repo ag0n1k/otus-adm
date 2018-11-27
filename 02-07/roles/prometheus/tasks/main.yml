@@ -49,7 +49,7 @@
     - "{{ prometheus_conf_dir }}/file_sd"
 
 - include_tasks: install-tar.yml
-
+- include_tasks: selinux.yml
 - name: Configure nofile limits for prometheus vi pam
   become: true
   pam_limits:
@@ -61,3 +61,10 @@
   loop:
       - soft
       - hard
+
+- name: Start prometheus
+  become: true
+  service:
+    name: "{{ prometheus_service_name }}"
+    state: started
+    enabled: true

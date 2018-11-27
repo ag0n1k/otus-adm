@@ -51,6 +51,20 @@
   check_mode: false
   register: __prometheus_systemd_version
 
+- name: Ensure default config is absent
+  become: true
+  file:
+    path: "{{ prometheus_path }}/prometheus.yml"
+    state: absent
+
+- name: Configure prometheus
+  become: true
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ prometheus_conf_dir }}/prometheus.yml"
+    backup: true
+  register: __prometheus_configuration
+
 - name: Configure service
   become: true
   template:

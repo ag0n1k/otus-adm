@@ -1,12 +1,12 @@
 ---
 prometheus_archive_path: >-
-  https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.darwin-amd64.tar.gz
+  https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-amd64.tar.gz
 
 prometheus_user_configuration:
   username: prometheus
   group: prometheus
   system: true
-  shell: /sbin/nologin
+  shell: /bin/bash
   home: /usr/lib/prometheus
   ##note: in prometheus home directory will be unpacked distro,
   # unpacked logic works only when directory does not exist, but user must exist so:
@@ -27,7 +27,7 @@ prometheus_conf_dir_mode: "0750"
 
 prometheus_bin_dir: /usr/bin
 
-prometheus_service_dir: /usr/lib/systemd
+prometheus_service_dir: /lib/systemd/system
 prometheus_service_name: prometheus
 
 prometheus_pam_domain: prometheus
@@ -36,7 +36,9 @@ prometheus_pam_no_file: "10240"
 prometheus_no_log: true
 
 prometheus_storage_retention: 30d
-prometheus_listen_address: "0.0.0.0:9000"
+prometheus_listen_port: "9000"
+prometheus_listen_address: "0.0.0.0"
+prometheus_listen: "{{ prometheus_listen_address }}:{{ prometheus_listen_port }}"
 
 prometheus_config: {}
 
@@ -73,10 +75,10 @@ __prometheus_config_default:
   static_configs:
     - targets: ['0.0.0.0:9090']
 
-    - job_name: 'dmpkit-api-services'
-  metrics_path: '/prometheus'
+#    - job_name: 'dmpkit-api-services'
+#  metrics_path: '/prometheus'
   # bearer_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoibnVsbCIsIm9yZyI6IntcImV4dF9pZFwiOlwicHJvbWV0aGV1c1wiLFwiaG9tZVwiOm51bGx9IiwiaXNzIjoiZG1wa2l0In0.LsGz_8iZJWvOzTKXRlgyEnInhP56ncCDEP-b02sBJvM
 
-  file_sd_configs:
-    - files:
-      - /etc/prometheus/file_sd/dmpkit-api-services.json
+#  file_sd_configs:
+#    - files:
+#      - /etc/prometheus/file_sd/dmpkit-api-services.json

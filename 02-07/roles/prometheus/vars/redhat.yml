@@ -1,3 +1,4 @@
 ---
-prometheus_selinux: true
-prometheus_selinux_: "..."
+prometheus_selinux_packages:
+  - libselinux-python
+  - policycoreutils-python
