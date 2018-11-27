@@ -56,5 +56,5 @@
   template:
     src: prometheus.service.j2
     dest: "{{ prometheus_service_dir }}/{{ prometheus_service_name }}.service"
-    backup: true
+    backup: false # ##note: prevent cluttering in systemd services directory
   register: __prometheus_service_configuration

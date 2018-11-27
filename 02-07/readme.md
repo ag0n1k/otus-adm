@@ -14,8 +14,12 @@
 
 ### Description:
 
+
 ##### How to:
 
 ```bash
+$ vagrant up
+$ python prepare.py
+$ ansible-playbook playbooks/site.yml
 $ bash start.sh
 ```
