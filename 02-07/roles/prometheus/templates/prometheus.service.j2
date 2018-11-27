@@ -18,20 +18,18 @@ ExecStart=/usr/local/bin/prometheus \
   --web.console.libraries={{ prometheus_conf_dir }}/console_libraries \
   --web.console.templates={{ prometheus_conf_dir }}/consoles \
   --web.listen-address={{ prometheus_listen_address }} \
-  --web.external-url={{ prometheus_web_external_url }}{% for flag, flag_value in prometheus_config_flags_extra.items() %}\
-  --{{ flag }}{% if flag_value %}={{ flag_value }}{% endif %} {% endfor %}
 
 PrivateTmp=true
 PrivateDevices=true
 ProtectHome=true
 NoNewPrivileges=true
 LimitNOFILE={{ prometheus_pam_no_file }}
-{% if prometheus_systemd_version.stdout | int >= 231 %}
+{% if __prometheus_systemd_version.stdout | int >= 231 %}
 ReadWritePaths={{ prometheus_data_dir }}
 {% else %}
 ReadWriteDirectories={{ prometheus_data_dir }}
 {% endif %}
-{% if prometheus_systemd_version.stdout | int >= 232 %}
+{% if __prometheus_systemd_version.stdout | int >= 232 %}
 ProtectSystem=strict
 ProtectControlGroups=true
 ProtectKernelModules=true

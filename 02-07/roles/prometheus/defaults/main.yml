@@ -23,7 +23,7 @@ prometheus_data_dir_mode: "0750"
 prometheus_data_dir_force: false
 
 prometheus_conf_dir: /etc/prometheus
-prometheus_conf_dirs_mode: "0750"
+prometheus_conf_dir_mode: "0750"
 
 prometheus_bin_dir: /usr/bin
 

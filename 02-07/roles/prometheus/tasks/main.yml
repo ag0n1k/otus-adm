@@ -30,7 +30,9 @@
     owner: "{{ prometheus_user_configuration.username }}"
     group: "{{ prometheus_user_configuration.group }}"
     state: directory
-  loop: "{{ prometheus_data_dir }} + [ '{{ prometheus_log4j_root_path  }}' ]"
+  loop:
+    - "{{ prometheus_data_dir }}"
+    ## - "{{ prometheus_log4j_root_path }}"
 
 - name: Ensure configuration directories for prometheus exist with right permissions
   become: true
