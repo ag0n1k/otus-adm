@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+function user_in_admin_group() {
+    for group in $(groups ${PAM_USER}); do
+        if [[ "admin" == "$group" ]]; then
+            echo 1
+        fi
+    done
+    return 0
+}
+if (( $(/etc/pam-script.d/check_holidays.py) )); then
+  exit 0
+elif ! (( $(user_in_admin_group) )); then
+  echo "Login at holidays allowed only for users from 'admin' group"
+  exit 1
+fi
