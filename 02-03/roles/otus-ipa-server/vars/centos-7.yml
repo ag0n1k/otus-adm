@@ -1,0 +1,4 @@
+---
+otus_ipa_server_packages: [ "ipa-server", "libselinux-python" ]
+otus_ipa_server_packages_dns: [ "ipa-server-dns" ]
+otus_ipa_server_packages_adtrust: [ "ipa-server-trust-ad" ]
