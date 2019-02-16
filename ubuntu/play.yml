@@ -1,0 +1,8 @@
+- hosts: test
+  tasks:
+    - debug:
+        var: ansible_distribution | lower
+    - debug:
+        var: ansible_distribution_release
+    - debug:
+        var: ansible_os_family
