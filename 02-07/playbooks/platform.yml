@@ -2,7 +2,6 @@
 - name: "Platform: Setup Prometheus"
   hosts: test
   gather_facts: true
-  vars:
-    otus_prometheus_state: reloaded
   roles:
-    - prometheus
+    - otus-prometheus
+    - otus-prometheus-node-exporter
