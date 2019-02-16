@@ -51,5 +51,9 @@
   set_fact:
     __otus_prometheus_state: "{{ __otus_prometheus_runtime_file_slurp['content'] | b64decode }}"
 
-- name: Ensure runtime flag is absent
-  when: __otus_prometheus_service_task
+- name: Ensure that runtime flag is absent
+  when: __otus_prometheus_service_task is defined and __otus_prometheus_service_task.changed
+  become: true
+  file:
+    path: "{{ __otus_prometheus_runtime_flag_filepath }}"
+    state: absent
