@@ -1,0 +1,3 @@
+---
+- name: ipaserver_
+  src: https://github.com/freeipa/ansible-freeipa.git

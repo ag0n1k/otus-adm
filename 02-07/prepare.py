@@ -56,29 +56,44 @@ class AnsibleConfigSSH(object):
 # endregion
 
 
-def generate_config(cmd=['vagrant', 'ssh-config'], inventory_file='inventories/test'):
-    from subprocess import Popen, PIPE
-    vagrant_config = VagrantSSHConfig()
-    command_ = Popen(cmd, stdout=PIPE)
-    for line in command_.stdout.readlines():
-        try:
-            line = str(line.decode('utf-8')).replace('\n', '').strip()
-            key, value = line.split(' ')
-            vagrant_config.__dict__.update({key: value})
-        except ValueError:
-            pass
-    vagrant_config.InventoryFile = inventory_file
-    return vagrant_config
+def generate_config(cmd=None, inventory_file='inventories/test'):
+    print('-- Parse ssh config from vagrant...')
+    try:
+        if not cmd:
+            cmd = ['vagrant', 'ssh-config']
+        from subprocess import Popen, PIPE
+        vagrant_config = VagrantSSHConfig()
+        command_ = Popen(cmd, stdout=PIPE)
+        for line in command_.stdout.readlines():
+            try:
+                line = str(line.decode('utf-8')).replace('\n', '').strip()
+                key, value = line.split(' ')
+                vagrant_config.__dict__.update({key: value})
+            except ValueError:
+                pass
+        vagrant_config.InventoryFile = inventory_file
+        return vagrant_config
+    except Exception as ex:
+        print('Could not parse config, passing: {}'.format(ex.args))
+    return None
 
 
 def write_inventory(config, mode='w', group='test', template_group='[{group}]\n',
                     template_string='{hostname}\tansible_host={host}\tansible_port={port}\n'):
-    with open(config.InventoryFile, mode) as f:
-        f.write(template_group.format(group=group))
-        f.write(template_string.format(hostname=config.Host, host=config.HostName, port=config.Port))
+    print('-- Write inventory file...')
+    try:
+        if not config:
+            raise FileNotFoundError
+        with open(config.InventoryFile, mode) as f:
+            f.write(template_group.format(group=group))
+            f.write(template_string.format(hostname=config.Host, host=config.HostName, port=config.Port))
+    except Exception as ex:
+        print('Could not save inventory, passing: {}'.format(ex.args))
+        pass
 
 
 def generate_cfg(config=VagrantSSHConfig(), additional_config=dict()):
+    print('-- Prepare ansible.cfg information...')
     ansible_config_default = AnsibleConfigDefaults()
     ansible_config_privilege = AnsibleConfigPrivilege()
     ansible_config_ssh = AnsibleConfigSSH()
@@ -89,6 +104,7 @@ def generate_cfg(config=VagrantSSHConfig(), additional_config=dict()):
 
 def write_config(config, ansible_cfg_path='ansible.cfg', mode='w', template_group='[{group}]\n',
                  template_string='{key: <32}= {value}\n'):
+    print('-- Write ansible.cfg information...')
     with open(ansible_cfg_path, mode) as f:
         f.write(template_group.format(group=config.group_name))
         for key, value in config.__dict__.items():
@@ -99,17 +115,17 @@ def write_config(config, ansible_cfg_path='ansible.cfg', mode='w', template_grou
 
 
 def main():
-    print('-- Parse ssh config from vagrant...')
     cfg = generate_config()
-    print('-- Write inventory file...')
     write_inventory(config=cfg)
-    print('-- Prepare ansible.cfg information...')
+
     config_groups = generate_cfg(config=cfg)
-    print('-- Write ansible.cfg information...')
+
     write_config(config=config_groups[0], mode='w', ansible_cfg_path='ansible.cfg')
     write_config(config=config_groups[1], mode='a', ansible_cfg_path='ansible.cfg')
     write_config(config=config_groups[2], mode='a', ansible_cfg_path='ansible.cfg')
+
     print('-- Ansible-vagrant prepare complete.')
+
 
 if __name__ == '__main__':
     main()

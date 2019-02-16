@@ -1,20 +1,12 @@
 ---
 - name: Install SELinux dependencies
-  when:
-    - ansible_version.full is version_compare('2.4', '>=')
-    - ansible_selinux.status == "enabled"
-  become: true
   package:
-    name: "{{ prometheus_selinux_packages }}"
+    name: "{{ otus_prometheus_selinux_packages }}"
     state: present
 
 - name: Allow prometheus to bind to port in SELinux
-  when:
-    - ansible_version.full is version_compare('2.4', '>=')
-    - ansible_selinux.status == "enabled"
-  become: true
   seport:
-    ports: "{{ prometheus_listen_port }}"
+    ports: "{{ otus_prometheus_listen_port }}"
     proto: tcp
     setype: http_port_t
     state: present

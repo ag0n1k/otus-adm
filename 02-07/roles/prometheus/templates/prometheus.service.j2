@@ -8,28 +8,28 @@ After=network.target
 [Service]
 Type=simple
 Environment="GOMAXPROCS={{ ansible_processor_vcpus|default(ansible_processor_count) }}"
-User={{ prometheus_user_configuration.username }}
-Group={{ prometheus_user_configuration.group }}
+User={{ otus_prometheus_user_configuration.username }}
+Group={{ otus_prometheus_user_configuration.group }}
 ExecReload=/bin/kill -HUP $MAINPID
-ExecStart={{ prometheus_bin_dir }}/prometheus \
-  --config.file={{ prometheus_conf_dir }}/prometheus.yml \
-  --storage.tsdb.path={{ prometheus_data_dir }} \
-  --storage.tsdb.retention={{ prometheus_storage_retention }} \
-  --web.console.libraries={{ prometheus_conf_dir }}/console_libraries \
-  --web.console.templates={{ prometheus_conf_dir }}/consoles \
-  --web.listen-address={{ prometheus_listen }} \
+ExecStart={{ otus_prometheus_bin_dir }}/prometheus \
+  --config.file={{ otus_prometheus_conf_dir }}/prometheus.yml \
+  --storage.tsdb.path={{ otus_prometheus_data_dir }} \
+  --storage.tsdb.retention={{ otus_prometheus_storage_retention }} \
+  --web.console.libraries={{ otus_prometheus_conf_dir }}/console_libraries \
+  --web.console.templates={{ otus_prometheus_conf_dir }}/consoles \
+  --web.listen-address={{ __otus_prometheus_listen }} \
 
 PrivateTmp=true
 PrivateDevices=true
 ProtectHome=true
 NoNewPrivileges=true
-LimitNOFILE={{ prometheus_pam_no_file }}
-{% if __prometheus_systemd_version.stdout | int >= 231 %}
-ReadWritePaths={{ prometheus_data_dir }}
+LimitNOFILE={{ otus_prometheus_pam_no_file }}
+{% if __otus_prometheus_systemd_version.stdout | int >= 231 %}
+ReadWritePaths={{ otus_prometheus_data_dir }}
 {% else %}
-ReadWriteDirectories={{ prometheus_data_dir }}
+ReadWriteDirectories={{ otus_prometheus_data_dir }}
 {% endif %}
-{% if __prometheus_systemd_version.stdout | int >= 232 %}
+{% if __otus_prometheus_systemd_version.stdout | int >= 232 %}
 ProtectSystem=strict
 ProtectControlGroups=true
 ProtectKernelModules=true
@@ -38,8 +38,8 @@ ProtectKernelTunables=true
 ProtectSystem=full
 {% endif %}
 
-{% if prometheus_http_proxy is defined %}
-Environment="HTTP_PROXY={{ prometheus_http_proxy }}"{% if prometheus_https_proxy is defined %} "HTTPS_PROXY={{ prometheus_https_proxy }}{% endif %}"
+{% if otus_prometheus_http_proxy is defined %}
+Environment="HTTP_PROXY={{ otus_prometheus_http_proxy }}"{% if otus_prometheus_https_proxy is defined %} "HTTPS_PROXY={{ otus_prometheus_https_proxy }}{% endif %}"
 {% endif %}
 
 SyslogIdentifier=prometheus

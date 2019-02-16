@@ -2,6 +2,7 @@
 - name: "Platform: Setup Prometheus"
   hosts: test
   gather_facts: true
-  become: yes
+  vars:
+    otus_prometheus_state: reloaded
   roles:
     - prometheus

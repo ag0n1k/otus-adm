@@ -1,70 +1,20 @@
 ---
+- include_vars: "{{ ansible_os_family | lower }}.yml"
 
-- name: Include OS-specific variables
-  include_vars: "{{ ansible_os_family | lower }}.yml"
-
-- name: Ensure group exist
+- name: Install prometheus
   become: true
-  group:
-    name: "{{ prometheus_user_configuration.group }}"
-    system: "{{ prometheus_user_configuration.system | default(omit) }}"
-    gid: "{{ prometheus_user_configuration.gid | default(omit) }}"
-
-- name: Ensure user exist
-  become: true
-  user:
-    name: "{{ prometheus_user_configuration.username }}"
-    password: "{{ prometheus_user_configuration.password | default(omit) }}"
-    system: "{{ prometheus_user_configuration.system  | default(omit)}}"
-    uid: "{{ prometheus_user_configuration.uid | default(omit) }}"
-    shell: "{{ prometheus_user_configuration.shell | default(omit) }}"
-    home: "{{ prometheus_user_configuration.home | default(omit) }}"
-    create_home: "{{ prometheus_user_configuration.create_home | default(omit) }}"
-  no_log: "{{ prometheus_no_log | default(omit) }}"
-
-- name: Ensure directories for prometheus exist with right permissions
-  become: true
-  file:
-    path: "{{ item }}"
-    mode: "{{ prometheus_data_dir_mode }}"
-    owner: "{{ prometheus_user_configuration.username }}"
-    group: "{{ prometheus_user_configuration.group }}"
-    state: directory
-  loop:
-    - "{{ prometheus_data_dir }}"
-    ## - "{{ prometheus_log4j_root_path }}"
-
-- name: Ensure configuration directories for prometheus exist with right permissions
-  become: true
-  file:
-    path: "{{ item }}"
-    mode: "{{ prometheus_conf_dir_mode }}"
-    owner: "{{ prometheus_user_configuration.username }}"
-    group: "{{ prometheus_user_configuration.group }}"
-    state: directory
-  loop:
-    - "{{ prometheus_conf_dir }}"
-    - "{{ prometheus_conf_dir }}/conf.d"
-    - "{{ prometheus_conf_dir }}/rules"
-    - "{{ prometheus_conf_dir }}/file_sd"
-
-- include_tasks: install-tar.yml
-- include_tasks: selinux.yml
-- name: Configure nofile limits for prometheus vi pam
-  become: true
-  pam_limits:
-    domain: "{{ prometheus_pam_domain }}"
-    limit_item: nofile
-    limit_type: "{{ item }}"
-    value: "{{ prometheus_pam_no_file }}"
-    use_max: true
-  loop:
-      - soft
-      - hard
-
-- name: Start prometheus
-  become: true
-  service:
-    name: "{{ prometheus_service_name }}"
-    state: started
-    enabled: true
+  block:
+    - include_tasks: keep-runtime.yml
+    - include_tasks: install-tar.yml
+    - include_tasks: selinux.yml
+      when:
+        - ansible_version.full is version_compare('2.4', '>=')
+        - ansible_selinux.status == "enabled"
+    - include_tasks: limits.yml
+    - include_tasks: keep-runtime.yml
+    - include_tasks: state.yml
+    - include_tasks: keep-runtime.yml
+  rescue:
+    - name: "Error description"
+      debug:
+        msg: "Caught an error. Fix it and try again"
