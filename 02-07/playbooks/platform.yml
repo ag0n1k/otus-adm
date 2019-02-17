@@ -5,3 +5,4 @@
   roles:
     - otus-prometheus
     - otus-prometheus-node-exporter
+    - otus-grafana

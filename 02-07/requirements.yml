@@ -4,3 +4,6 @@
 
 - name: otus-prometheus-node-exporter
   src: https://github.com/ag0n1k/ansible-node-exporter.git
+
+- name: otus-grafana
+  src: https://github.com/ag0n1k/ansible-grafana.git

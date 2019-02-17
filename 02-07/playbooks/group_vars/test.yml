@@ -1,0 +1,31 @@
+otus_node_exporter_web_listen_address: "0.0.0.0:9100"
+
+otus_prometheus_listen_port: "9000"
+otus_prometheus_listen_address: "0.0.0.0"
+
+otus_prometheus_config:
+  global:
+    scrape_interval: 5s
+    evaluation_interval: 5s
+
+  scrape_configs:
+    - job_name: 'prometheus-node-exporter'
+      static_configs:
+        - targets:
+            - "{{ otus_node_exporter_web_listen_address }}"
+
+grafana_datasources:
+  - name: prometheus
+    type: prometheus
+    access: proxy
+    url: "http://{{ otus_prometheus_listen_address }}:{{ otus_prometheus_listen_port }}"
+    basicAuth: false
+
+grafana_dashboards:
+  - dashboard_id: 9096
+    revision_id: 1
+    datasource: prometheus
+
+grafana_security:
+  admin_user: admin
+  admin_password: "password"
