@@ -1,0 +1,31 @@
+---
+- name: Install ipa-client packages
+  yum:
+    name: "{{ otus_ipa_client_packages }}"
+    state: present
+
+- name: Disable chrony
+  yum:
+    name: chrony
+    state: absent
+
+- name: Enable ntp
+  systemd:
+    name: ntpd
+    enabled: yes
+    state: started
+
+- name: Setup ipa-client
+  command: >
+    ipa-client-install -U \
+      -p {{ otus_ipa_client_login }} \
+      -w {{ otus_ipa_client_password }} \
+      --server={{ otus_ipa_client_server_name }} \
+      --ip-address={{ otus_ipa_client_server_ip }} \
+      --domain={{ otus_ipa_client_domain }} \
+      --realm={{ otus_ipa_client_realm }} \
+      --hostname={{ otus_ipa_client_hostname }} \
+      --force-ntpd
+      --mkhomedir
+  args:
+    creates: /etc/ipa/default.conf

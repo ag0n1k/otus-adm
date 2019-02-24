@@ -12,6 +12,7 @@
 
 #### Important steps
 
+- IPA requires memory. At least 1,9 Free RAM
 
 ### How to:
 
@@ -23,5 +24,5 @@ bash start.sh
 ### Links
 
 - https://github.com/freeipa/ansible-freeipa
-- 
-
+- https://github.com/freeipa/ansible-freeipa/wiki/Workshop-ansible-freeipa
+- https://access.redhat.com/solutions/71663

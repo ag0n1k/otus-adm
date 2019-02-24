@@ -1,0 +1,28 @@
+---
+- name: Configure /etc/hosts
+  hosts: all
+  become: true
+  tasks:
+    - name: Configure /etc/hosts
+      template:
+        src: hosts.j2
+        dest: /etc/hosts
+    - name: turn off selinux
+      selinux:
+        state: disabled
+      register: __selinux
+    - name: reboot
+      when: __selinux.changed
+      reboot:
+
+- name: Playbook to configure IPA servers
+  hosts: ipaservers
+  become: true
+  roles:
+    - role: otus-ipa-server
+
+- name: Playbook to configure IPA clients
+  hosts: ipaclients
+  become: true
+  roles:
+    - role: otus-ipa-client

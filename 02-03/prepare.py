@@ -18,10 +18,9 @@ class VagrantSSHConfig(object):
 class AnsibleConfigDefaults(object):
     def __init__(self):
         self.group_name = 'defaults'
-        self.inventory = "inventories/test"
+        self.inventory = "inventory/hosts"
         self.remote_user = "vagrant"
         self.retry_files_enabled = "false"
-        self.private_key_file = ".vagrant/machines/otuslinux/virtualbox/private_key"
         self.roles_path = "roles"
         self.remote_tmp = "$HOME/.ansible/tmp"
         self.local_tmp = "$HOME/.ansible/tmp"
@@ -56,7 +55,7 @@ class AnsibleConfigSSH(object):
 # endregion
 
 
-def generate_config(cmd=None, inventory_file='inventories/test'):
+def generate_config(cmd=None, inventory_file='inventory/test'):
     print('-- Parse ssh config from vagrant...')
     try:
         if not cmd:

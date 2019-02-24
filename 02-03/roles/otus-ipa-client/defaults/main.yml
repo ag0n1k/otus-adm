@@ -1,0 +1,11 @@
+---
+otus_ipa_client_packages:
+  - ipa-client
+  - ntp
+otus_ipa_client_login: admin
+otus_ipa_client_password: qwerty123
+otus_ipa_client_server_name: ipaserver.test.local
+otus_ipa_client_server_ip: 192.168.11.101
+otus_ipa_client_domain: test.local
+otus_ipa_client_realm: TEST.LOCAL
+otus_ipa_client_hostname: ipaclient.test.local
