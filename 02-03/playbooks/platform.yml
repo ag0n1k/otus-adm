@@ -20,9 +20,48 @@
   become: true
   roles:
     - role: otus-ipa-server
+  tasks:
+    - name: Add ssh key for the user
+      failed_when: false  # ##note: https://github.com/ansible/ansible/issues/29417
+      ipa_user:
+        name: Vasia
+        state: present
+        krbpasswordexpiration: 20200119235959
+        givenname: Vasia
+        loginshell: /bin/bash
+        sn: Acme
+        mail:
+          - vasia@acme.com
+        telephonenumber:
+          - '+77777777777'
+        sshpubkey:
+          - "{{ lookup('file', 'files/vasia.rsa.pub') }}"
+        uidnumber: 1003
+        gidnumber: 1003
+        ipa_host: ipaserver.test.local
+        ipa_user: admin
+        ipa_pass: qwerty123
 
 - name: Playbook to configure IPA clients
   hosts: ipaclients
   become: true
   roles:
     - role: otus-ipa-client
+  tasks:
+    - name: Wait for sync
+      pause:  # ##todo: wait_for_connection?
+        seconds: 15
+
+- name: Tests
+  hosts: ipaclients
+  vars:
+    ansible_ssh_private_key_file: "playbooks/files/vasia.rsa"
+  remote_user: vasia
+  tasks:
+    - name: Test
+      shell: "pwd && whoami"
+      changed_when: false
+      register: __tests
+    - name: Debug
+      debug:
+        var: __tests

@@ -9,15 +9,20 @@
 
 ### Description:
 
+Simple installation of freeipa server and client roles,
+some tasks, such as configure hosts, ipa_user, tests over ssh key connectivity 
+also there is a freeipa playbook sample that not so simple to use,
+see the links
 
 #### Important steps
 
-- IPA requires memory. At least 1,9 Free RAM
+- IPA server requires memory. At least 1,9 Free RAM
+- There is an issue in ipa_user module, see the ##note
+- Pause module in use, see the ##todo
 
-### How to:
+### How to
 
 ```bash
-python prepare.py
 bash start.sh 
 ```
 

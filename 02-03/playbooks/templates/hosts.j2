@@ -1,6 +1,6 @@
 {{ ansible_managed | comment }}
 127.0.0.1              localhost
 
-{% for host in groups['all'] %}
+{% for host in groups['all'] | sort %}
 {{ hostvars[host].ansible_host }}         {{ hostvars[host].ansible_fqdn }}
 {% endfor %}
