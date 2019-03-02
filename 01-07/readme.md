@@ -1,4 +1,4 @@
-# Working with systemd
+# Working with (io)nice
 
 ### Task:
 - Create script with two competing processes by IO with different ionice
